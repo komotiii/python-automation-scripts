@@ -1,0 +1,22 @@
+# Python cache and virtual env
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Secrets and local env files
+.env
+.env.*
+!.env.example
+secrets/
+*service*key*.json
+
+# Logs
+logs/
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
