@@ -1,0 +1,2 @@
+Work,work-calendar-id@group.calendar.google.com
+Private,private-calendar-id@group.calendar.google.com
