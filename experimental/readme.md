@@ -85,4 +85,3 @@ python timeline_viewer.py --input-json "Timeline Edits.json" --output-dir "timel
 - 天気・温湿度・デバイス状態を統合した音声レポート
 - 定時ルーチンとの連携アナウンス
 - 複数データソースの非同期取得
-
