@@ -1,46 +1,49 @@
 # api-bots
 
-This folder contains automation bots used in my personal workflow.
+Discord、Google Calendar、Webスクレイピングなどの外部APIを使った個人用自動化ボット集です。
 
-## PlayingBOT.py
+## ディレクトリ構成
 
-`PlayingBOT.py` tracks a target Discord member's current activity and creates a Google Calendar event when the activity changes or ends.
+```text
+api-bots/
+  .env.example
+  .gitignore
+  PlayingBOT.py
+  Tukunavi.py
+  requirements.txt
+  data/
+    .gitkeep
+```
 
-### Why this version is safe to publish
+## クイックスタート
 
-- No secrets are hardcoded in source code.
-- Discord and Google settings are loaded from environment variables.
-- Local service account key files are referenced by path and kept out of git.
-
-### Setup
-
-1. Install dependencies.
+1. 依存パッケージをインストールします。
 
 ```bash
 pip install -r api-bots/requirements.txt
 ```
 
-2. Copy the environment template and set your values.
+2. ローカル用の環境変数ファイルを作成します。
 
 ```bash
 copy api-bots\.env.example api-bots\.env
 ```
 
-`PlayingBOT.py` loads `api-bots/.env` automatically.
+3. `api-bots/.env` に必要な値を設定します。
 
-3. Configure Discord bot intents.
-
-- Enable `SERVER MEMBERS INTENT` and `PRESENCE INTENT` in the Discord Developer Portal.
-
-4. Share your target Google Calendar with the service account email.
-
-5. Run the bot.
+4. ボットを実行します。
 
 ```bash
 python api-bots/PlayingBOT.py
+# または
+python api-bots/Tukunavi.py
 ```
 
-### Required environment variables
+## PlayingBOT.py
+
+Discord上の対象ユーザーのアクティビティ変化を監視し、開始・終了タイミングをGoogle Calendarに記録します。
+
+### PlayingBOT 必須環境変数
 
 - `DISCORD_BOT_TOKEN`
 - `DISCORD_TARGET_USER_ID`
@@ -48,44 +51,41 @@ python api-bots/PlayingBOT.py
 - `GOOGLE_SERVICE_ACCOUNT_FILE`
 - `GOOGLE_CALENDAR_ID`
 
-### Optional environment variables
+### PlayingBOT 任意環境変数
 
-- `PLAYING_BOT_LOG_FILE` (default: `logs/activity_log.txt`)
-- `PLAYING_BOT_CHECK_INTERVAL_SECONDS` (default: `60`)
-- `PLAYING_BOT_TIMEZONE` (default: `Asia/Tokyo`)
+- `PLAYING_BOT_LOG_FILE`（既定値: `logs/activity_log.txt`）
+- `PLAYING_BOT_CHECK_INTERVAL_SECONDS`（既定値: `60`）
+- `PLAYING_BOT_TIMEZONE`（既定値: `Asia/Tokyo`）
 
-### Security note
+### PlayingBOT 事前設定
 
-If a token has ever been committed or shared, revoke and reissue it before making the repository public.
+- Discord Developer Portalで `SERVER MEMBERS INTENT` と `PRESENCE INTENT` を有効化してください。
+- 監視対象を記録するGoogle Calendarを、サービスアカウントのメールアドレスに共有してください。
 
 ## Tukunavi.py
 
-Tukunavi monitor checks forum post updates and sends notifications to Discord.
+Tsukunaviフォーラムの更新を監視し、Discordに通知します。
 
-### Setup
+### Tukunavi 必須環境変数
 
-1. Install dependencies.
+- `DISCORD_BOT_TOKEN`
+- `TSUKUNAVI_DISCORD_CHANNEL_ID`
 
-```bash
-pip install -r api-bots/requirements.txt
-```
+### Tukunavi 任意環境変数
 
-2. Set environment values in api-bots/.env.
+- `TSUKUNAVI_URL`
+- `TSUKUNAVI_SAVE_FILE`（既定値: `data/posts.json`）
+- `TSUKUNAVI_CHECK_INTERVAL_SECONDS`（既定値: `300`）
+- `TSUKUNAVI_RETRY_SECONDS`（既定値: `30`）
+- `TSUKUNAVI_REQUEST_TIMEOUT_SECONDS`（既定値: `20`）
+- `TSUKUNAVI_SKIP_INITIAL_NOTIFY`（既定値: `true`）
+- `TSUKUNAVI_NOTIFY_ON_START`（既定値: `true`）
 
-Required:
+`TSUKUNAVI_NOTIFY_ON_START=true` の場合、起動時に「監視開始」をDiscordへ通知します。
 
-- DISCORD_WEBHOOK_URL
+## Public公開前チェック
 
-Optional:
-
-- TSUKUNAVI_URL
-- TSUKUNAVI_SAVE_FILE (default: api-bots/data/posts.json)
-- TSUKUNAVI_CHECK_INTERVAL_SECONDS (default: 300)
-- TSUKUNAVI_RETRY_SECONDS (default: 30)
-- TSUKUNAVI_REQUEST_TIMEOUT_SECONDS (default: 20)
-
-3. Run.
-
-```bash
-python api-bots/Tukunavi.py
-```
+- `.env` がGit管理対象に入っていないことを確認する
+- APIトークンやWebhook URLをソースコードへ直書きしない
+- サービスアカウント鍵JSONをリポジトリ外または `.gitignore` 対象にする
+- 過去に秘密情報を漏えいした可能性がある場合は、公開前に必ずローテーションする
